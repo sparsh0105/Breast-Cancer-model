@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
@@ -10,17 +10,25 @@ def create_model(data):
     X = data.drop(['diagnosis'], axis=1)
     y = data['diagnosis']
 
-    scaler = StandardScaler()
+    # Initialize and fit the scaler
+    scaler = MinMaxScaler()
     X_scaled = scaler.fit_transform(X)
 
+    # Split the data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.3, random_state=1)
 
+    # Initialize and fit the logistic regression model
     model = LogisticRegression(solver="liblinear")
     model.fit(X_train, y_train)
 
+    # Predict the target variable for the test set
     y_pred = model.predict(X_test)
-    print("Classification Report: ", classification_report(y_test, y_pred))
 
+    # Print the classification report
+    print("Classification Report:")
+    print(classification_report(y_test, y_pred))
+
+    # Return the trained model and scaler
     return model, scaler
 
 def get_clean_data():
@@ -67,6 +75,7 @@ def predict_with_custom_values(custom_values):
     }
 
 if __name__ == "__main__":
+    make_model()
     # Uncomment this line if you need to re-train and save the model
     # make_model()
 
