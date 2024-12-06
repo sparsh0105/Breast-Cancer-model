@@ -1,0 +1,3 @@
+# Ignore all CSV files
+*.csv
+venv/
